@@ -218,6 +218,11 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+// SetSeed allows custom seeds for rand
+func SetSeed(seed int64) {
+	rand.Seed(seed)
+}
+
 // ResetUnique is used to forget generated unique values.
 // Call this when you're done generating a dataset.
 func ResetUnique() {
@@ -563,7 +568,7 @@ func setDataWithTag(v reflect.Value, tag string) error {
 	switch v.Kind() {
 	case reflect.Ptr:
 		if _, exist := mapperTag[tag]; !exist {
-			return fmt.Errorf(ErrTagNotSupported,tag)
+			return fmt.Errorf(ErrTagNotSupported, tag)
 		}
 		if _, def := defaultTag[tag]; !def {
 			res, err := mapperTag[tag](v)
@@ -595,7 +600,7 @@ func setDataWithTag(v reflect.Value, tag string) error {
 		return userDefinedMap(v, tag)
 	default:
 		if _, exist := mapperTag[tag]; !exist {
-			return fmt.Errorf(ErrTagNotSupported,tag)
+			return fmt.Errorf(ErrTagNotSupported, tag)
 		}
 		res, err := mapperTag[tag](v)
 		if err != nil {
@@ -692,7 +697,7 @@ func userDefinedString(v reflect.Value, tag string) error {
 		}
 	}
 	if res == nil {
-		return fmt.Errorf(ErrTagNotSupported,tag)
+		return fmt.Errorf(ErrTagNotSupported, tag)
 	}
 	val, _ := res.(string)
 	v.SetString(val)
@@ -715,7 +720,7 @@ func userDefinedNumber(v reflect.Value, tag string) error {
 		}
 	}
 	if res == nil {
-		return fmt.Errorf(ErrTagNotSupported,tag)
+		return fmt.Errorf(ErrTagNotSupported, tag)
 	}
 
 	v.Set(reflect.ValueOf(res))
@@ -724,7 +729,7 @@ func userDefinedNumber(v reflect.Value, tag string) error {
 
 func extractStringFromTag(tag string) (interface{}, error) {
 	if !strings.Contains(tag, Length) {
-		return nil, fmt.Errorf(ErrTagNotSupported,tag)
+		return nil, fmt.Errorf(ErrTagNotSupported, tag)
 	}
 	len, err := extractNumberFromText(tag)
 	if err != nil {
@@ -736,7 +741,7 @@ func extractStringFromTag(tag string) (interface{}, error) {
 
 func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
 	if !strings.Contains(tag, BoundaryStart) || !strings.Contains(tag, BoundaryEnd) {
-		return nil,fmt.Errorf(ErrTagNotSupported,tag)
+		return nil, fmt.Errorf(ErrTagNotSupported, tag)
 	}
 	valuesStr := strings.SplitN(tag, comma, -1)
 	if len(valuesStr) != 2 {
