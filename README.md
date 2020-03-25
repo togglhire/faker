@@ -6,11 +6,11 @@ Struct Data Fake Generator
 
 Faker will generate you a fake data based on your Struct.
 
-[![Build Status](https://travis-ci.org/bxcodec/faker.svg?branch=master)](https://travis-ci.org/bxcodec/faker)
-[![codecov](https://codecov.io/gh/bxcodec/faker/branch/master/graph/badge.svg)](https://codecov.io/gh/bxcodec/faker)
-[![Go Report Card](https://goreportcard.com/badge/github.com/bxcodec/faker)](https://goreportcard.com/report/github.com/bxcodec/faker)
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/bxcodec/faker/blob/master/LICENSE)
-[![GoDoc](https://godoc.org/github.com/bxcodec/faker?status.svg)](https://godoc.org/github.com/bxcodec/faker)
+[![Build Status](https://travis-ci.org/togglhire/faker.svg?branch=master)](https://travis-ci.org/togglhire/faker)
+[![codecov](https://codecov.io/gh/togglhire/faker/branch/master/graph/badge.svg)](https://codecov.io/gh/togglhire/faker)
+[![Go Report Card](https://goreportcard.com/badge/github.com/togglhire/faker)](https://goreportcard.com/report/github.com/togglhire/faker)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/togglhire/faker/blob/master/LICENSE)
+[![GoDoc](https://godoc.org/github.com/togglhire/faker?status.svg)](https://godoc.org/github.com/togglhire/faker)
 
 ## Index
 
@@ -23,8 +23,8 @@ Faker will generate you a fake data based on your Struct.
 
 ## Support
 
-You can file an [Issue](https://github.com/bxcodec/faker/issues/new).
-See documentation in [Godoc](https://godoc.org/github.com/bxcodec/faker)
+You can file an [Issue](https://github.com/togglhire/faker/issues/new).
+See documentation in [Godoc](https://godoc.org/github.com/togglhire/faker)
 
 
 ## Getting Started
@@ -32,7 +32,7 @@ See documentation in [Godoc](https://godoc.org/github.com/bxcodec/faker)
 #### Download
 
 ```shell
-go get -u github.com/bxcodec/faker/v3
+go get -u github.com/togglhire/faker/v3
 ```
 # Example
 

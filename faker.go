@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bxcodec/faker/v3/support/slice"
+	"github.com/togglhire/faker/v3/support/slice"
 )
 
 var (
