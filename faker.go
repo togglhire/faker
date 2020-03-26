@@ -5,6 +5,7 @@ package faker
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -574,13 +575,24 @@ type structTag struct {
 }
 
 func setDataWithTag(v reflect.Value, tag string) error {
-
 	if v.Kind() != reflect.Ptr {
+		log.Println("dead")
 		return errors.New(ErrValueNotPtr)
 	}
 	v = reflect.Indirect(v)
 	switch v.Kind() {
 	case reflect.Ptr:
+		if strings.Contains(tag, Use) {
+			t := v.Type()
+			newv := reflect.New(t.Elem()).Elem()
+			err := setDataWithTagSwitch(newv, tag)
+			if err != nil {
+				return err
+			}
+			v.Set(newv.Addr())
+			return nil
+		}
+
 		if _, exist := mapperTag[tag]; !exist {
 			return fmt.Errorf(ErrTagNotSupported, tag)
 		}
@@ -603,6 +615,13 @@ func setDataWithTag(v reflect.Value, tag string) error {
 		newv.Elem().Set(rval)
 		v.Set(newv)
 		return nil
+	default:
+		return setDataWithTagSwitch(v, tag)
+	}
+}
+
+func setDataWithTagSwitch(v reflect.Value, tag string) error {
+	switch v.Kind() {
 	case reflect.String:
 		return userDefinedString(v, tag)
 	case reflect.Int, reflect.Int32, reflect.Int64, reflect.Int8, reflect.Int16, reflect.Uint, reflect.Uint8,

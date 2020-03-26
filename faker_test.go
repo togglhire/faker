@@ -1085,3 +1085,162 @@ func TestUseTag(t *testing.T) {
 		log.Printf("expected: %#+v\nactual: %#+v\n", b, a)
 	}
 }
+
+func TestUseTag_Ptr(t *testing.T) {
+
+	// SomeStruct ...
+	type SomeStruct struct {
+		Inta  *int   `faker:"use=10"`
+		Int8  *int8  `faker:"use=11"`
+		Int16 *int16 `faker:"use=12"`
+		Int32 *int32 `faker:"use=13"`
+		Int64 *int64 `faker:"use=14"`
+
+		UInta  *uint   `faker:"use=15"`
+		UInt8  *uint8  `faker:"use=16"`
+		UInt16 *uint16 `faker:"use=17"`
+		UInt32 *uint32 `faker:"use=18"`
+		UInt64 *uint64 `faker:"use=19"`
+
+		Float32 *float32 `faker:"use=20.1"`
+		Float64 *float64 `faker:"use=20.2"`
+
+		String       *string `faker:"use=string"`
+		CustomString *string `faker:"use=custom string"`
+
+		Bool *bool `faker:"use=true"`
+	}
+
+	a := SomeStruct{}
+	err := FakeData(&a)
+	if err != nil {
+		t.Error("Expected NoError ", err.Error())
+		return
+	}
+
+	if a.Inta == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Inta != 10 {
+		t.Error("Expected 10")
+		return
+	}
+	if a.Int8 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Int8 != 11 {
+		t.Error("Expected 11")
+		return
+	}
+	if a.Int16 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Int16 != 12 {
+		t.Error("Expected 12")
+		return
+	}
+	if a.Int32 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Int32 != 13 {
+		t.Error("Expected 13")
+		return
+	}
+	if a.Int64 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Int64 != 14 {
+		t.Error("Expected 14")
+		return
+	}
+
+	if a.UInta == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.UInta != 15 {
+		t.Error("Expected 15")
+		return
+	}
+	if a.UInt8 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.UInt8 != 16 {
+		t.Error("Expected 16")
+		return
+	}
+	if a.UInt16 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.UInt16 != 17 {
+		t.Error("Expected 17")
+		return
+	}
+	if a.UInt32 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.UInt32 != 18 {
+		t.Error("Expected 18")
+		return
+	}
+	if a.UInt64 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.UInt64 != 19 {
+		t.Error("Expected 19")
+		return
+	}
+
+	if a.Float32 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Float32 != 20.1 {
+		t.Error("Expected 20.1")
+		return
+	}
+	if a.Float64 == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Float64 != 20.2 {
+		t.Error("Expected 20.2")
+		return
+	}
+
+	if a.String == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.String != "string" {
+		t.Error("Expected string")
+		return
+	}
+
+	if a.CustomString == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.CustomString != "custom string" {
+		t.Error("Expected custom string")
+		return
+	}
+
+	if a.Bool == nil {
+		t.Error("Expected not nil")
+		return
+	}
+	if *a.Bool != true {
+		t.Error("Expected true")
+		return
+	}
+}
