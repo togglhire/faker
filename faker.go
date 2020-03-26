@@ -5,7 +5,6 @@ package faker
 import (
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -576,7 +575,6 @@ type structTag struct {
 
 func setDataWithTag(v reflect.Value, tag string) error {
 	if v.Kind() != reflect.Ptr {
-		log.Println("dead")
 		return errors.New(ErrValueNotPtr)
 	}
 	v = reflect.Indirect(v)
