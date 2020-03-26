@@ -612,6 +612,8 @@ func setDataWithTag(v reflect.Value, tag string) error {
 		return userDefinedArray(v, tag)
 	case reflect.Map:
 		return userDefinedMap(v, tag)
+	case reflect.Bool:
+		return userDefinedBool(v, tag)
 	default:
 		if _, exist := mapperTag[tag]; !exist {
 			return fmt.Errorf(ErrTagNotSupported, tag)
@@ -622,6 +624,24 @@ func setDataWithTag(v reflect.Value, tag string) error {
 		}
 		v.Set(reflect.ValueOf(res))
 	}
+	return nil
+}
+
+func userDefinedBool(v reflect.Value, tag string) error {
+	var res interface{}
+	var err error
+
+	if strings.Contains(tag, Use) {
+		res, err = extractBoolFromUseTag(tag)
+		if err != nil {
+			return err
+		}
+	}
+	if res == nil {
+		return fmt.Errorf(ErrTagNotSupported, tag)
+	}
+	val, _ := res.(bool)
+	v.SetBool(val)
 	return nil
 }
 
@@ -761,6 +781,17 @@ func extractStringFromTag(tag string) (interface{}, error) {
 	}
 	res := randomString(int(len))
 	return res, nil
+}
+
+func extractBoolFromUseTag(tag string) (interface{}, error) {
+	if !strings.Contains(tag, Use) {
+		return nil, fmt.Errorf(ErrTagNotSupported, tag)
+	}
+	str, err := extractStringFromText(tag)
+	if err != nil {
+		return nil, err
+	}
+	return strconv.ParseBool(str)
 }
 
 func extractStringFromUseTag(tag string) (interface{}, error) {

@@ -1047,6 +1047,8 @@ func TestUseTag(t *testing.T) {
 
 		String       string `faker:"use=string"`
 		CustomString string `faker:"use=custom string"`
+
+		Bool bool `faker:"use=true"`
 	}
 
 	a := SomeStruct{}
@@ -1074,6 +1076,8 @@ func TestUseTag(t *testing.T) {
 
 		String:       "string",
 		CustomString: "custom string",
+
+		Bool: true,
 	}
 
 	if a != b {
