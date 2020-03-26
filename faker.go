@@ -5,6 +5,7 @@ package faker
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -96,6 +97,7 @@ const (
 	BoundaryStart         = "boundary_start"
 	BoundaryEnd           = "boundary_end"
 	Equals                = "="
+	Use                   = "use"
 	comma                 = ","
 )
 
@@ -703,8 +705,13 @@ func userDefinedString(v reflect.Value, tag string) error {
 		if err != nil {
 			return err
 		}
-	} else {
+	} else if strings.Contains(tag, Length) {
 		res, err = extractStringFromTag(tag)
+		if err != nil {
+			return err
+		}
+	} else {
+		res, err = extractStringFromUseTag(tag)
 		if err != nil {
 			return err
 		}
@@ -726,8 +733,13 @@ func userDefinedNumber(v reflect.Value, tag string) error {
 		if err != nil {
 			return err
 		}
-	} else {
+	} else if strings.Contains(tag, BoundaryStart) {
 		res, err = extractNumberFromTag(tag, v.Type())
+		if err != nil {
+			return err
+		}
+	} else {
+		res, err = extractNumberFromUseTag(tag, v.Type())
 		if err != nil {
 			return err
 		}
@@ -748,8 +760,54 @@ func extractStringFromTag(tag string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	res := randomString(len)
+	res := randomString(int(len))
 	return res, nil
+}
+
+func extractStringFromUseTag(tag string) (interface{}, error) {
+	if !strings.Contains(tag, Use) {
+		return nil, fmt.Errorf(ErrTagNotSupported, tag)
+	}
+	return extractStringFromText(tag)
+}
+
+func extractNumberFromUseTag(tag string, t reflect.Type) (interface{}, error) {
+	if !strings.Contains(tag, Use) {
+		return nil, fmt.Errorf(ErrTagNotSupported, tag)
+	}
+	number, err := extractNumberFromText(tag)
+	if err != nil {
+		return nil, err
+	}
+
+	switch t.Kind() {
+	case reflect.Uint:
+		return uint(number), nil
+	case reflect.Uint8:
+		return uint8(number), nil
+	case reflect.Uint16:
+		return uint16(number), nil
+	case reflect.Uint32:
+		return uint32(number), nil
+	case reflect.Uint64:
+		return uint64(number), nil
+	case reflect.Int:
+		return int(number), nil
+	case reflect.Int8:
+		return int8(number), nil
+	case reflect.Int16:
+		return int16(number), nil
+	case reflect.Int32:
+		return int32(number), nil
+	case reflect.Int64:
+		return int64(number), nil
+	case reflect.Float32:
+		return float32(number), nil
+	case reflect.Float64:
+		return float64(number), nil
+	default:
+		return nil, errors.New(ErrNotSupportedTypeForTag)
+	}
 }
 
 func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
@@ -758,6 +816,7 @@ func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
 	}
 	valuesStr := strings.SplitN(tag, comma, -1)
 	if len(valuesStr) != 2 {
+		log.Println("824")
 		return nil, fmt.Errorf(ErrWrongFormattedTag, tag)
 	}
 	startBoundary, err := extractNumberFromText(valuesStr[0])
@@ -768,7 +827,7 @@ func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	boundary := numberBoundary{start: startBoundary, end: endBoundary}
+	boundary := numberBoundary{start: int(startBoundary), end: int(endBoundary)}
 	switch t.Kind() {
 	case reflect.Uint:
 		return uint(randomIntegerWithBoundary(boundary)), nil
@@ -795,13 +854,30 @@ func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
 	}
 }
 
-func extractNumberFromText(text string) (int, error) {
+func extractNumberFromText(text string) (float64, error) {
 	text = strings.TrimSpace(text)
 	texts := strings.SplitN(text, Equals, -1)
 	if len(texts) != 2 {
+		log.Println("866")
 		return 0, fmt.Errorf(ErrWrongFormattedTag, text)
 	}
-	return strconv.Atoi(texts[1])
+	result, err := strconv.ParseFloat(texts[1], 64)
+	if err != nil {
+		log.Println("871")
+		log.Printf("texts: %#+v\n", texts)
+		return 0, fmt.Errorf(ErrWrongFormattedTag, text)
+	}
+	return result, nil
+}
+
+func extractStringFromText(text string) (string, error) {
+	text = strings.TrimSpace(text)
+	texts := strings.SplitN(text, Equals, -1)
+	if len(texts) != 2 {
+		log.Println("877")
+		return "", fmt.Errorf(ErrWrongFormattedTag, text)
+	}
+	return texts[1], nil
 }
 
 func randomString(n int) string {
