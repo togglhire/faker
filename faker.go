@@ -5,7 +5,6 @@ package faker
 import (
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -816,7 +815,6 @@ func extractNumberFromTag(tag string, t reflect.Type) (interface{}, error) {
 	}
 	valuesStr := strings.SplitN(tag, comma, -1)
 	if len(valuesStr) != 2 {
-		log.Println("824")
 		return nil, fmt.Errorf(ErrWrongFormattedTag, tag)
 	}
 	startBoundary, err := extractNumberFromText(valuesStr[0])
@@ -858,13 +856,10 @@ func extractNumberFromText(text string) (float64, error) {
 	text = strings.TrimSpace(text)
 	texts := strings.SplitN(text, Equals, -1)
 	if len(texts) != 2 {
-		log.Println("866")
 		return 0, fmt.Errorf(ErrWrongFormattedTag, text)
 	}
 	result, err := strconv.ParseFloat(texts[1], 64)
 	if err != nil {
-		log.Println("871")
-		log.Printf("texts: %#+v\n", texts)
 		return 0, fmt.Errorf(ErrWrongFormattedTag, text)
 	}
 	return result, nil
@@ -874,7 +869,6 @@ func extractStringFromText(text string) (string, error) {
 	text = strings.TrimSpace(text)
 	texts := strings.SplitN(text, Equals, -1)
 	if len(texts) != 2 {
-		log.Println("877")
 		return "", fmt.Errorf(ErrWrongFormattedTag, text)
 	}
 	return texts[1], nil
