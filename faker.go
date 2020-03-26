@@ -32,7 +32,7 @@ var (
 	// Unique values are kept in memory so the generator retries if the value already exists
 	uniqueValues = map[string][]interface{}{}
 	// Uses randomSize as constant
-	isRandomSizeConstant = false
+	isFixedSize = false
 )
 
 type numberBoundary struct {
@@ -250,13 +250,23 @@ func SetRandomStringLength(size int) error {
 	return nil
 }
 
-// SetRandomMapAndSliceSize sets the size for maps and slices for random generation.
-func SetRandomMapAndSliceSize(size int, isConstant bool) error {
+// SetFixedMapAndSliceSize sets the fixed size for maps and slices for generation.
+func SetFixedMapAndSliceSize(size int) error {
 	if size < 0 {
 		return fmt.Errorf(ErrSmallerThanZero, size)
 	}
 	randomSize = size
-	isRandomSizeConstant = isConstant
+	isFixedSize = true
+	return nil
+}
+
+// SetRandomMapAndSliceSize sets the size for maps and slices for random generation.
+func SetRandomMapAndSliceSize(size int) error {
+	if size < 0 {
+		return fmt.Errorf(ErrSmallerThanZero, size)
+	}
+	randomSize = size
+	isFixedSize = false
 	return nil
 }
 
@@ -827,7 +837,7 @@ func randomSliceAndMapSize() int {
 	if testRandZero {
 		return 0
 	}
-	if isRandomSizeConstant {
+	if isFixedSize {
 		return randomSize
 	}
 	return rand.Intn(randomSize)
